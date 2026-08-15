@@ -1,7 +1,13 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 
-const secret = () => new TextEncoder().encode(process.env.AUTH_SECRET ?? "dev-insecure-secret-change-me");
+const secret = () => {
+  const value = process.env.AUTH_SECRET?.trim();
+  if (!value) {
+    throw new Error("Missing AUTH_SECRET environment variable.");
+  }
+  return new TextEncoder().encode(value);
+};
 
 const BASE = 60 * 60 * 1000;
 
